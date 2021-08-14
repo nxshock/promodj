@@ -27,8 +27,4 @@ package() {
 	install -Dm644 "$pkgname.conf"     "$pkgdir/etc/$pkgname.conf"
 	install -Dm644 "$pkgname.service"  "$pkgdir/usr/lib/systemd/system/$pkgname.service"
 	install -Dm644 "$pkgname.sysusers" "$pkgdir/usr/lib/sysusers.d/$pkgname.conf"
-
-	mkdir "$pkgdir/usr/lib/$pkgname"
-	cp -R "site" "$pkgdir/usr/lib/$pkgname"
-	cp -R "templates" "$pkgdir/usr/lib/$pkgname"
 }
