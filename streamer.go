@@ -8,7 +8,7 @@ import (
 	"os/exec"
 
 	"gopkg.in/djherbis/buffer.v1"
-	"gopkg.in/djherbis/nio.v2"
+	"github.com/djherbis/nio/v3"
 )
 
 func stream(url string, w http.ResponseWriter) error {
