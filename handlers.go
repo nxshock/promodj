@@ -7,7 +7,7 @@ import (
 
 func handleGenres(w http.ResponseWriter, r *http.Request) {
 	if r.RequestURI != "/" {
-		http.Error(w, "not found", http.StatusNotFound)
+		http.FileServer(http.FS(stripSiteFS)).ServeHTTP(w, r)
 		return
 	}
 
@@ -18,7 +18,7 @@ func handleGenres(w http.ResponseWriter, r *http.Request) {
 		Domain: r.Host,
 		Genres: Genres}
 
-	err := templates.Lookup("genres.html").Execute(w, data)
+	err := templates.Lookup("index.htm").Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}

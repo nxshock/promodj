@@ -1,18 +1,12 @@
 package main
 
 import (
-	"embed"
 	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
-
-	_ "embed"
 )
-
-//go:embed templates/genres.html
-var templateBytes embed.FS
 
 var templates *template.Template
 
@@ -45,7 +39,7 @@ func init() {
 func initTepmplates() error {
 	var err error
 
-	templates, err = template.ParseFS(templateBytes, "templates/*.html")
+	templates, err = template.ParseFS(siteFS, "site/*.htm")
 	if err != nil {
 		return err
 	}
