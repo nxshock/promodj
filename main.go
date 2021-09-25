@@ -1,14 +1,12 @@
 package main
 
 import (
-	"html/template"
 	"log"
 	"net/http"
 	"os"
 	"time"
 )
 
-var templates *template.Template
 
 func init() {
 	log.SetFlags(0)
@@ -34,17 +32,6 @@ func init() {
 	}
 
 	http.DefaultClient.Timeout = 5 * time.Second
-}
-
-func initTepmplates() error {
-	var err error
-
-	templates, err = template.ParseFS(siteFS, "site/*.htm")
-	if err != nil {
-		return err
-	}
-
-	return nil
 }
 
 func main() {
