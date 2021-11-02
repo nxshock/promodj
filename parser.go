@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"net/url"
+	"strconv"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
@@ -52,11 +53,19 @@ func updateGenreList() ([]Genre, error) {
 }
 
 // tracksByGenre возвращает список треков по указанному жанру
-func tracksByGenre(genre string) ([]TrackInfo, error) {
+func tracksByGenre(genre string, params url.Values) ([]TrackInfo, error) {
+	if params == nil {
+		params = url.Values{"download": []string{"1"}}
+	} else {
+		params.Set("download", "1") // only available tracks
+	}
+
 	var result []TrackInfo
 
 	for i := 1; i <= 50; i++ {
-		url := fmt.Sprintf("https://promodj.com/music/%s?download=1&page=%d", genre, i)
+		params.Set("page", strconv.Itoa(i))
+		//url := fmt.Sprintf("https://promodj.com/music/%s?download=1&page=%d", genre, i)
+		url := constructUrl(genre, params)
 
 		doc, err := goquery.NewDocument(url)
 		if err != nil {
@@ -117,4 +126,22 @@ func removeDuplicate(strSlice []TrackInfo) []TrackInfo {
 		}
 	}
 	return list
+}
+
+func constructUrl(genre string, params url.Values) string {
+	urlTemplate := fmt.Sprintf("https://promodj.com/music/%s", genre)
+
+	if genre == "" {
+		urlTemplate = "https://promodj.com/music"
+	}
+
+	u, err := url.Parse(urlTemplate)
+	if err != nil {
+		panic(err)
+	}
+
+	u.RawQuery = params.Encode()
+
+	//?download=1&page=%d
+	return u.String()
 }

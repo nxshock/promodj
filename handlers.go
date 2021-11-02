@@ -2,7 +2,9 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"net/url"
 )
 
 func handleGenres(w http.ResponseWriter, r *http.Request) {
@@ -26,18 +28,23 @@ func handleGenres(w http.ResponseWriter, r *http.Request) {
 
 func handleGetM3u(w http.ResponseWriter, r *http.Request) {
 	genreCode := r.FormValue("genre")
-	if genreCode == "" {
-		http.Error(w, `"genre" field is not specified`, http.StatusBadRequest)
-		return
+	params := url.Values{}
+
+	if r.FormValue("top100") != "" {
+		params.Set("top100", "1")
 	}
 
-	tracks, err := tracksByGenre(genreCode)
+	tracks, err := tracksByGenre(genreCode, params)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
 	b := tracksToM3u(r.Host, tracks)
+
+	if genreCode == "" {
+		genreCode = "music"
+	}
 
 	w.Header().Set("Content-Disposition", fmt.Sprintf(`attachment; filename="%s.m3u8"`, genreCode))
 	w.Header().Set("Content-Type", "audio/x-mpegurl")
@@ -47,5 +54,8 @@ func handleGetM3u(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleStream(w http.ResponseWriter, r *http.Request) {
-	stream(r.FormValue("url"), w)
+	err := stream(r.FormValue("url"), w)
+	if err != nil {
+		log.Println(err)
+	}
 }
