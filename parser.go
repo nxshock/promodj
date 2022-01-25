@@ -8,6 +8,7 @@ import (
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/nxshock/gwp"
 )
 
 // Genre represents track information
@@ -52,6 +53,31 @@ func updateGenreList() ([]Genre, error) {
 	return genres, nil
 }
 
+func parsePage(url string, resultsChan chan TrackInfo) {
+	doc, err := goquery.NewDocument(url)
+	if err != nil {
+		return
+	}
+
+	doc.Find("div.title > a.invert").Each(
+		func(n int, s *goquery.Selection) {
+			href, exists := s.Attr("href")
+			if !exists {
+				return
+			}
+
+			fields := strings.Split(href, "/")
+			if len(fields) != 7 {
+				return
+			}
+
+			fileUrl := fmt.Sprintf("https://promodj.com/download/%s/%s.mp3", fields[5], fields[6])
+
+			resultsChan <- TrackInfo{s.Text(), fileUrl}
+		})
+
+}
+
 // tracksByGenre возвращает список треков по указанному жанру
 func tracksByGenre(genre string, params url.Values) ([]TrackInfo, error) {
 	if params == nil {
@@ -61,33 +87,26 @@ func tracksByGenre(genre string, params url.Values) ([]TrackInfo, error) {
 	}
 
 	var result []TrackInfo
+	resultsChan := make(chan TrackInfo)
 
-	for i := 1; i <= 50; i++ {
-		params.Set("page", strconv.Itoa(i))
-		//url := fmt.Sprintf("https://promodj.com/music/%s?download=1&page=%d", genre, i)
-		url := constructUrl(genre, params)
+	wp := gwp.New(4)
 
-		doc, err := goquery.NewDocument(url)
-		if err != nil {
-			return nil, err
-		}
+	go func() {
+		for i := 1; i <= 50; i++ {
+			params.Set("page", strconv.Itoa(i))
+			url := constructUrl(genre, params)
 
-		doc.Find("div.title > a.invert").Each(
-			func(n int, s *goquery.Selection) {
-				href, exists := s.Attr("href")
-				if !exists {
-					return
-				}
-
-				fields := strings.Split(href, "/")
-				if len(fields) != 7 {
-					return
-				}
-
-				fileUrl := fmt.Sprintf("https://promodj.com/download/%s/%s.mp3", fields[5], fields[6])
-
-				result = append(result, TrackInfo{s.Text(), fileUrl})
+			wp.Add(func() error {
+				parsePage(url, resultsChan)
+				return nil
 			})
+		}
+		wp.CloseAndWait()
+		close(resultsChan)
+	}()
+
+	for trackInfo := range resultsChan {
+		result = append(result, trackInfo)
 	}
 
 	result = removeDuplicate(result)
