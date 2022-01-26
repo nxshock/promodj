@@ -5,7 +5,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 		<title>Список жанров</title>
 		<link rel="stylesheet" href="/style.css">
-		<link rel="icon" href="/favicon.svg" type="image/svg+xml">		
+		<link rel="icon" href="/favicon.svg" type="image/svg+xml">
 	</head>
 	<body>
 		<header>
@@ -15,10 +15,8 @@
 		<main>
 			<h1>Список жанров</h1>
 			<ul id="genres-list">
-				<li><a href="/getm3u?top100=1">TOP 100</a></li>
-				{{range .Genres}}
-				<li><a href="/getm3u?genre={{.Code}}">{{.Name}}</a></li>
-				{{end}}
+				<li><a href="/getm3u?top100=1">TOP 100</a></li>{{range .Genres}}
+				<li><a href="/getm3u?genre={{.Code}}">{{.Name}}</a></li>{{end}}
 			</ul>
 		</main>
 	</body>
