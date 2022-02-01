@@ -39,6 +39,7 @@ func encode(url string, w io.Writer) error {
 	if err != nil {
 		return err
 	}
+	defer out.Close()
 
 	err = cmd.Start()
 	if err != nil {
