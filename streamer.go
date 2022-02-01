@@ -4,11 +4,12 @@ import (
 	"errors"
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os/exec"
 
-	"gopkg.in/djherbis/buffer.v1"
 	"github.com/djherbis/nio/v3"
+	"gopkg.in/djherbis/buffer.v1"
 )
 
 func stream(url string, w http.ResponseWriter) error {
@@ -47,7 +48,10 @@ func encode(url string, w io.Writer) error {
 	}
 
 	go func() {
-		cmd.Wait()
+		err := cmd.Wait()
+		if err != nil {
+			log.Println(err)
+		}
 	}()
 
 	buf := buffer.New(int64(config.BufferSize) * 1024 * 1024)
