@@ -10,10 +10,10 @@ import (
 
 // Config represents configuration
 type Config struct {
-	ListenAddr string `default:":80" validate:"required`
+	ListenAddr string `default:":80" validate:"required"`
 
 	// Mb
-	BufferSize uint `default:"32" validate:"required|min:1`
+	BufferSize uint `default:"32" validate:"required|min:1"`
 
 	// Kb
 	Bitrate uint `default:"32" validate:"required|min:8|max:320"`
