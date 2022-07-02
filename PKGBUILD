@@ -1,5 +1,5 @@
 pkgname=promodj
-pkgver=0.1.2
+pkgver=0.2.0
 pkgrel=0
 pkgdesc="Proxy client for promodj.com"
 arch=('x86_64' 'aarch64')
