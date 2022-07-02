@@ -15,8 +15,8 @@
 		<main>
 			<h1>Список жанров</h1>
 			<ul id="genres-list">
-				<li><a href="/getm3u?top100=1">TOP 100</a></li>{{range .Genres}}
-				<li><a href="/getm3u?genre={{.Code}}">{{.Name}}</a></li>{{end}}
+				<li><a href="/player?top100=1">TOP 100</a></li>{{range .Genres}}
+				<li><a href="/player?genre={{.Code}}">{{.Name}}</a></li>{{end}}
 			</ul>
 		</main>
 	</body>

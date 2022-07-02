@@ -38,6 +38,7 @@ func main() {
 	http.HandleFunc("/genres", handleGenres)
 	http.HandleFunc("/getm3u", handleGetM3u)
 	http.HandleFunc("/stream", handleStream)
+	http.HandleFunc("/player", handlePlayer)
 
 	err := http.ListenAndServe(config.ListenAddr, nil)
 	if err != nil {
