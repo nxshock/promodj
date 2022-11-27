@@ -57,7 +57,7 @@ func encode(url string, w io.Writer) error {
 	buf := buffer.New(int64(config.BufferSize) * 1024 * 1024)
 	_, err = nio.Copy(w, out, buf)
 	if err != nil {
-		cmd.Process.Kill()
+		_ = cmd.Process.Kill()
 	}
 
 	return nil

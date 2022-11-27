@@ -86,7 +86,7 @@ func handleGetM3u(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "audio/x-mpegurl")
 	w.Header().Set("Accept-Ranges", "none")
 
-	w.Write(b)
+	_, _ = w.Write(b)
 }
 
 func handleStream(w http.ResponseWriter, r *http.Request) {

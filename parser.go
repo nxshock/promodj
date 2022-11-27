@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
+	"net/http"
 	"net/url"
 	"strconv"
 	"strings"
@@ -40,7 +41,13 @@ func UpdateGenres() error {
 func updateGenreList() ([]Genre, error) {
 	url := "https://promodj.com/music"
 
-	doc, err := goquery.NewDocument(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +61,13 @@ func updateGenreList() ([]Genre, error) {
 }
 
 func parsePage(url string, resultsChan chan TrackInfo) {
-	doc, err := goquery.NewDocument(url)
+	resp, err := http.Get(url)
+	if err != nil {
+		return
+	}
+	defer resp.Body.Close()
+
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
 	if err != nil {
 		return
 	}
