@@ -48,9 +48,7 @@ func handlePlayer(w http.ResponseWriter, r *http.Request) {
 	var data []J
 
 	for _, track := range tracks {
-		host := "music.nxshock.me"
-
-		u, _ := url.Parse(fmt.Sprintf("https://%s/stream", host))
+		u, _ := url.Parse("stream")
 		q := make(url.Values)
 		q.Add("url", track.Url)
 		u.RawQuery = q.Encode()
