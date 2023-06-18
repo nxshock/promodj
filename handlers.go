@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strconv"
 )
 
 func handleGenres(w http.ResponseWriter, r *http.Request) {
@@ -90,7 +91,12 @@ func handleGetM3u(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleStream(w http.ResponseWriter, r *http.Request) {
-	err := stream(r.FormValue("url"), w)
+	bitrateKbps, err := strconv.ParseUint(r.FormValue("b"), 10, 64)
+	if err != nil {
+		bitrateKbps = config.Bitrate
+	}
+
+	err = stream(r.FormValue("url"), w, bitrateKbps)
 	if err != nil {
 		log.Println(err)
 	}

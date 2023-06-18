@@ -12,7 +12,7 @@ import (
 	"gopkg.in/djherbis/buffer.v1"
 )
 
-func stream(url string, w http.ResponseWriter) error {
+func stream(url string, w http.ResponseWriter, bitrateKbps uint64) error {
 	if url == "" {
 		err := errors.New("empty url")
 
@@ -24,10 +24,10 @@ func stream(url string, w http.ResponseWriter) error {
 	w.Header().Set("Accept-Ranges", "none")
 	w.WriteHeader(http.StatusOK)
 
-	return encode(url, w)
+	return encode(url, w, bitrateKbps)
 }
 
-func encode(url string, w io.Writer) error {
+func encode(url string, w io.Writer, bitrateKbps uint64) error {
 	cmd := exec.Command("ffmpeg",
 		"-i", url,
 		"-vn",

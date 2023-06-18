@@ -16,7 +16,7 @@ type Config struct {
 	BufferSize uint `default:"32" validate:"required|min:1"`
 
 	// Kb
-	Bitrate uint `default:"32" validate:"required|min:8|max:320"`
+	Bitrate uint64 `default:"32" validate:"required|min:8|max:320"`
 
 	Codec       string `default:"libopus"   validate:"required"`
 	Format      string `default:"opus"      validate:"required" `
