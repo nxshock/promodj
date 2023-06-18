@@ -91,7 +91,7 @@ func handleGetM3u(w http.ResponseWriter, r *http.Request) {
 }
 
 func handleStream(w http.ResponseWriter, r *http.Request) {
-	bitrateKbps, err := strconv.ParseUint(r.FormValue("b"), 10, 64)
+	bitrateKbps, err := strconv.ParseUint(r.URL.Query().Get("b"), 10, 64)
 	if err != nil {
 		bitrateKbps = config.Bitrate
 	}
