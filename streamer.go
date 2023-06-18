@@ -32,7 +32,7 @@ func encode(url string, w io.Writer, bitrateKbps uint64) error {
 		"-i", url,
 		"-vn",
 		"-c:a", config.Codec,
-		"-b:a", fmt.Sprintf("%dk", config.Bitrate),
+		"-b:a", fmt.Sprintf("%dk", bitrateKbps),
 		"-f", config.Format,
 		"-ac", "2",
 		"pipe:1")
